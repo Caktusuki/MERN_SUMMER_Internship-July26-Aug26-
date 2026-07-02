@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .mydiv{
+            color: red;
+        }
+        #id4{
+            color: blue;
+        }
+        div{
+            /* FIXED: Added '!' before important and a closing semicolon */
+            color: chartreuse !important; 
+        }
+    </style>
+</head>
+<body>
+    <div class = 'mydiv' id="id1" >I m a div 1</div>
+    <div class = 'mydiv' id="id2" >I m a div 2</div>
+    <div class = 'mydiv' id="id3" >I m a div 3</div>
+    <div class = 'mydiv' id="id4" >I m a div 4</div>
+
+    <!-- FIXED: Changed class to 'mydiv' so it matches the CSS selector -->
+    <div class="mydiv"> i m another div</div>
+    <div class="mydiv"> i m another div</div>
+</body>
+</html>

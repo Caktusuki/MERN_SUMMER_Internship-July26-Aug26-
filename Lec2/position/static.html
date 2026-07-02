@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>1. Static Position</title>
+    <style>
+        .box {
+            background-color: #7f8c8d;
+            color: white;
+            padding: 20px;
+            font-weight: bold;
+            /* These properties are completely IGNORED on static elements: */
+            top: 50px;
+            left: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Static Positioning (Default)</h2>
+    <div class="box">
+        I am static. Even though top and left are set to 50px in the CSS, I am not moving at all!
+    </div>
+</body>
+</html>

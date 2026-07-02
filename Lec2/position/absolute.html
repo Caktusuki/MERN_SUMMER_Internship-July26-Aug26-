@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            border: 1px solid black;
+        }
+        .div2{
+            /* Removes the div from normal flow and places it relative to the screen */
+            position: absolute;
+            /* position: relative; */ /* If you uncomment this, it stays in flow but offsets from its original spot */
+            top: 60px;
+            left: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div>i m a div1</div>
+
+    <!-- This div will float over the others due to absolute positioning -->
+    <div class="div2"> i m div 2</div>
+
+    <!-- This div will push up under div1, ignoring div2's space entirely -->
+    <div>i m div 3</div>
+</body>
+</html>
