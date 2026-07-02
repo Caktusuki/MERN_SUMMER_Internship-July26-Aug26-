@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Box Model Demo</title>
+    <style>
+        .box-demo {
+            /* 1. Content Dimensions */
+            width: 300px;
+            height: 100px;
+            background-color: aquamarine;
+            color: black;
+            font-weight: bold;
+
+            /* 2. Padding: Space INSIDE the border */
+            padding: 20px;
+
+            /* 3. Border: The surrounding edge */
+            border: 10px solid #333;
+
+            /* 4. Margin: Space OUTSIDE the border */
+            margin: 40px;
+        }
+
+        .neighbor-box {
+            width: 300px;
+            padding: 10px;
+            background-color: lightcoral;
+            font-weight: bold;
+            margin-left: 40px; /* Aligns it nicely under the first box */
+        }
+    </style>
+</head>
+<body>
+
+    <h2>The CSS Box Model</h2>
+
+    <!-- The main element demonstrating the box model -->
+    <div class="box-demo">
+        I am the content layer.
+    </div>
+
+    <!-- Neighbor element to demonstrate how margin pushes things away -->
+    <div class="neighbor-box">
+        I am a neighbor box pushed away by the top box's margin.
+    </div>
+
+</body>
+</html>
