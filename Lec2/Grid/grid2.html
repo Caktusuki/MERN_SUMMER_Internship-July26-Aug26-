@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asymmetric Grid Layout Setup</title>
+    <style>
+        /* Reset margins for a clean fullscreen look */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #121212; /* Dark background for visibility */
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Your Grid Container Definition --- */
+        .container {
+            height: 90vh; /* Using view-height ensures it responds well to the screen */
+            width: 100%;
+            max-width: 1200px;
+            gap: 1rem; /* 1rem gap spacing from your code */
+            background-color: rgb(249, 163, 255); /* Your pink container color */
+            display: grid;
+            grid-template-rows: repeat(4, 1fr); /* 4 horizontal row tracks */
+            grid-template-columns: repeat(4, 1fr); /* 4 vertical column tracks */
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        /* --- Your Base Boxes Style --- */
+        .boxes {
+            background-color: white; /* White cards from your code */
+            border-radius: 4px;
+            padding: 15px;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        /* --- Specific Coordinate Mappings for All 9 Boxes --- */
+
+        .b1 {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3; /* Spans rows 1 and 2 */
+        }
+
+        .header { 
+            grid-column: 2 / 4; /* Fixed: Added missing hyphen to make grid-column work */
+            grid-row: 1 / 2;
+        }
+
+        .b3 {
+            grid-column: 4 / 6;
+            grid-row: 1 / 2;
+        }
+
+        .b4 {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+        }
+
+        .content3 { 
+            grid-column: 3 / 5;
+            grid-row: 2 / 3;
+        }
+
+        .aside { 
+            grid-column: 5 / 6; /* Pushed to the far right edge track */
+            grid-row: 2 / 4; /* Spans vertically down rows 2 and 3 */
+        }
+
+        .b9 {
+            grid-column: 1 / 2;
+            grid-row: 3 / 4;
+        }
+
+        .b7 {
+            grid-column: 2 / 4;
+            grid-row: 3 / 4;
+        }
+
+        .footer { 
+            grid-column: 4 / 5;
+            grid-row: 3 / 4;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main structural wrapper container matching your style file -->
+    <div class="container">
+        <div class="boxes b1">1</div>
+        <div class="boxes header">2 (Header)</div>
+        <div class="boxes b3">3</div>
+        <div class="boxes b4">4</div>
+        <div class="boxes content3">5 (Content 3)</div>
+        <div class="boxes aside">6 (Aside)</div>
+        <div class="boxes b9">9</div>
+        <div class="boxes b7">7</div>
+        <div class="boxes footer">8 (Footer)</div>
+    </div>
+
+</body>
+</html>

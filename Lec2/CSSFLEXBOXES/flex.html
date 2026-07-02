@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flexbox Example</title>
+    <style>
+      /* 1. The Parent Container */
+      .navbar {
+        display: flex;
+        justify-content: space-between; /* Pushes logo to left, menu to right */
+        align-items: center; /* Centers them vertically */
+        background-color: #333;
+        padding: 15px 30px;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+
+      /* 2. The Navigation Menu (also a Flex container!) */
+      .nav-links {
+        display: flex;
+        gap: 20px; /* Puts a 20px gap between each link */
+        list-style: none; /* Removes bullet points */
+        margin: 0;
+        padding: 0;
+      }
+
+      /* Just styling the links to look nice */
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .nav-links a:hover {
+        color: #ff9900;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HTML Structure -->
+    <nav class="navbar">
+      <div class="logo">
+        <h2>MyLogo</h2>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </body>
+</html>
