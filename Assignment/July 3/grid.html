@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grid Layout</title>
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: #222;
+      }
+      .container {
+        background: #2b2b73;
+        padding: 15px;
+        display: grid;
+        grid-template-columns: repeat(4, 150px);
+        grid-template-rows: repeat(3, 80px);
+        gap: 10px;
+      }
+      .box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        color: white;
+        font-weight: bold;
+      }
+      .green {
+        background: #73bf4d;
+      }
+      .red {
+        background: #ef2d2d;
+      }
+      .orange {
+        background: #fdb63b;
+      }
+      .box1 {
+        grid-row: 1 / 4;
+      }
+      .box2 {
+        grid-column: 2 / 4;
+      }
+      .box3 {
+        grid-column: 4;
+      }
+      .box4 {
+        grid-column: 2;
+      }
+      .box5 {
+        grid-column: 3;
+      }
+
+      .box6 {
+        grid-column: 2;
+      }
+      .box7 {
+        grid-column: 3;
+      }
+      .box8 {
+        grid-column: 4;
+        grid-row: 2 / 4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="box green box1"></div>
+      <div class="box green box2"></div>
+      <div class="box red box3"></div>
+      <div class="box orange box4"></div>
+      <div class="box red box5"></div>
+      <div class="box red box6"></div>
+      <div class="box orange box7"></div>
+      <div class="box green box8"></div>
+    </div>
+  </body>
+</html>
