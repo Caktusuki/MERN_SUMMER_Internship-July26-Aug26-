@@ -46,8 +46,8 @@
     letter-spacing:1px;
   }
   .logo img{
-    height:38px;
-    width:auto; /* <-- replace src with your own logo file */
+    height: 60px;
+    width:auto; 
   }
   .nav-links{
     display:flex;
