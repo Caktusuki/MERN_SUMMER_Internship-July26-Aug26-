@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timing Function Race</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: white;
+            font-family: sans-serif;
+            padding: 40px;
+        }
+
+        /* The container to show the start and finish lines */
+        .track {
+            border-left: 3px solid #2ecc71;  /* Start line (Green) */
+            border-right: 3px solid #e74c3c; /* Finish line (Red) */
+            width: 800px;
+            padding: 10px 0;
+        }
+
+        .racer {
+            width: 100px;
+            height: 40px;
+            margin-bottom: 15px;
+            position: relative; /* Unlocking the 'left' property! */
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            
+            /* Shared animation properties for all racers */
+            animation-name: dragRace;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate; /* Bounces back and forth */
+        }
+
+        /* Applying the different timing functions */
+        .linear { 
+            background-color: #3498db; 
+            animation-timing-function: linear; 
+        }
+        
+        .ease { 
+            background-color: #e67e22; 
+            animation-timing-function: ease; 
+        }
+        
+        .ease-in { 
+            background-color: #9b59b6; 
+            animation-timing-function: ease-in; 
+        }
+        
+        .ease-out { 
+            background-color: #f1c40f; color: black;
+            animation-timing-function: ease-out; 
+        }
+        
+        .ease-in-out { 
+            background-color: #1abc9c; 
+            animation-timing-function: ease-in-out; 
+        }
+
+        /* The Keyframes blueprint */
+        @keyframes dragRace {
+            0% {
+                left: 0px;
+            }
+            100% {
+                left: 700px; /* Moves 700px to the right */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>The Great CSS Race</h2>
+    <p>Every block takes exactly 4 seconds to reach the end, but watch how their speeds change along the way!</p>
+
+    <div class="track">
+        <div class="racer linear">Linear</div>
+        <div class="racer ease">Ease</div>
+        <div class="racer ease-in">Ease-In</div>
+        <div class="racer ease-out">Ease-Out</div>
+        <div class="racer ease-in-out">In-Out</div>
+    </div>
+
+</body>
+</html>

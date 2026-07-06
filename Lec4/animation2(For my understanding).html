@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Animations Example</title>
+    <style>
+        body {
+            background-color: #1e1e1e; /* Dark theme */
+            color: white;
+            font-family: sans-serif;
+            margin: 50px;
+        }
+
+        /* 1. The Movement Blueprint */
+        @keyframes move2 {
+            0% {
+                left: 0px;
+            }
+            100% {
+                left: 500px; /* Moves it to the right */
+            }
+        }
+
+        /* 2. The Rotation Blueprint (with the syntax fixed!) */
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 3. Applying it to your class */
+        .div1 {
+            height: 100px; 
+            width: 100px;
+            background-color: blue;
+            position: relative; /* Necessary for 'left' to work */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            
+            /* THE MAGIC LINE: Two animations separated by a comma */
+            animation: move2 5s linear forwards, rotate 2s 7s infinite linear;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Chaining Animations Together</h2>
+    <p>Watch the sequence of events:</p>
+    <ul>
+        <li><strong>0s to 5s:</strong> The box moves 500px to the right and stops (because of `forwards`).</li>
+        <li><strong>5s to 7s:</strong> The box sits still (waiting for the 7s delay to finish).</li>
+        <li><strong>7s and beyond:</strong> The box begins spinning continuously in place.</li>
+    </ul>
+
+    <div class="div1">SPIN</div>
+
+</body>
+</html>
