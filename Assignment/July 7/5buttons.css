@@ -1,0 +1,225 @@
+/* ========================
+   GLOBAL & LAYOUT RESET
+======================== */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; 
+    background: #222;
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+
+/* Base styles for all buttons so they align perfectly */
+button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: inherit;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ========================
+   BUTTON 1: GLOW ON HOVER
+======================== */
+.btn1 {
+    width: 220px;
+    height: 50px;
+    color: #fff;
+    background: transparent;
+    position: relative;
+    z-index: 0; /* Creates stacking context */
+    border-radius: 10px;
+}
+
+.btn1::before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -2; /* Deepest layer */
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
+}
+
+.btn1::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #111; /* Dark center */
+    left: 0;
+    top: 0;
+    z-index: -1; /* Above the glow, below the text */
+    border-radius: 10px;
+}
+
+.btn1:active { color: #000; }
+.btn1:active::after { background: transparent; }
+.btn1:hover::before { opacity: 1; }
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
+
+/* ========================
+   BUTTON 2: SWIPE FILL
+======================== */
+.btn2 {
+    width: 220px;
+    height: 50px;
+    border-radius: 50px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all .3s;
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+    background: transparent;
+}
+
+.btn2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0cf;
+    border-radius: 50px;
+    z-index: -2;
+}
+
+.btn2::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: #007da6; /* Darkened blue */
+    transition: all .3s;
+    border-radius: 50px;
+    z-index: -1;
+}
+
+.btn2:hover { color: #fff; }
+.btn2:hover::before { width: 100%; }
+
+/* ========================
+   BUTTON 3: 3D PUSH DOWN
+======================== */
+.btn3 {
+    width: 220px;
+    height: 50px;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #FFA12B;
+    position: relative;
+    text-shadow: 0px 1px 0px #000;
+    box-shadow: inset 0 1px 0 #FFE5C4, 0 10px 0 #915100;
+    border-radius: 5px;
+    transition: all 0.1s;
+}
+
+.btn3:active {
+    transform: translateY(10px);
+    background-color: #F78900;
+    box-shadow: inset 0 1px 0 #FFE5C4, inset 0 -3px 0 #915100;
+}
+
+/* ========================
+   BUTTON 4: BORDER EXPAND
+======================== */
+.btn4 {
+    width: 220px;
+    height: 50px;
+    color: #FFF;
+    background: #FF6766;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 0; 
+}
+
+.btn4::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; 
+    opacity: 0;
+    transition: all 0.3s;
+    border-top: 1px solid rgba(255,255,255,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.5);
+    transform: scale(0.1, 1);
+    box-sizing: border-box;
+}
+
+.btn4::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; 
+    transition: all 0.3s;
+    background-color: rgba(255,255,255,0.1);
+}
+
+.btn4:hover { letter-spacing: 2px; }
+.btn4:hover::before { opacity: 1; transform: scale(1, 1); }
+.btn4:hover::after { opacity: 0; transform: scale(0.1, 1); }
+
+/* ========================
+   BUTTON 5: BOX SCALE
+======================== */
+.btn5 {
+    width: 220px;
+    height: 50px;
+    color: #FFF;
+    background: #66A182;
+    transition: all 0.5s;
+    position: relative;
+    z-index: 0; 
+}
+
+.btn5::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; 
+    background-color: rgba(255,255,255,0.1);
+    transition: all 0.3s;
+}
+
+.btn5::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; 
+    opacity: 0;
+    transition: all 0.3s;
+    border: 1px solid rgba(255,255,255,0.5);
+    transform: scale(1.2, 1.2);
+    box-sizing: border-box;
+}
+
+.btn5:hover::before { opacity: 0; transform: scale(0.5, 0.5); }
+.btn5:hover::after { opacity: 1; transform: scale(1, 1); }
