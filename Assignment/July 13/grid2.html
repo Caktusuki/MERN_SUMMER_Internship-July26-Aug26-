@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #custom-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(3, 120px);
+      gap: 12px;
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      background-color: #2b2b45;
+      padding: 12px;
+      grid-template-areas: 
+        "box1 box2 box2 box3"
+        "box1 box4 box5 box6"
+        "box1 box7 box8 box6";
+    }
+
+    .box {
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="custom-grid"></div>
+
+  <script>
+    const container = document.getElementById('custom-grid');
+
+    const boxesData = [
+      { area: 'box1', color: '#7cb342' }, 
+      { area: 'box2', color: '#7cb342' }, 
+      { area: 'box3', color: '#e53935' }, 
+      { area: 'box4', color: '#ffb300' }, 
+      { area: 'box5', color: '#e53935' }, 
+      { area: 'box6', color: '#7cb342' }, 
+      { area: 'box7', color: '#e53935' }, 
+      { area: 'box8', color: '#ffb300' }  
+    ];
+
+    boxesData.forEach(data => {
+      const newBox = document.createElement('div');
+      newBox.classList.add('box');
+      newBox.style.gridArea = data.area;
+      newBox.style.backgroundColor = data.color;
+      container.appendChild(newBox);
+    });
+  </script>
+
+</body>
+</html>

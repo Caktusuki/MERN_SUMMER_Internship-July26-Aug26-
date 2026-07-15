@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Calculator Body */
+    .calculator {
+      background-color: #3b3c40;
+      width: 320px;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 40px auto;
+      font-family: 'Courier New', Courier, monospace; /* Digital look */
+      box-shadow: 0px 10px 15px rgba(0,0,0,0.5);
+    }
+
+    /* The Display Screen (Updated for text) */
+    .screen {
+      background-color: #d3d8c6;
+      height: 60px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      box-shadow: inset 0px 2px 5px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end; /* Align numbers to the right */
+      padding: 0 15px;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #111;
+      overflow: hidden;
+    }
+
+    /* Top Tax Buttons */
+    .tax-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .btn-tax {
+      background-color: #43a074;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* Keypad Grid */
+    #keypad {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    /* General Buttons */
+    .btn {
+      border: none;
+      border-radius: 5px;
+      padding: 15px 0;
+      font-size: 1.2rem;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0px 3px 0px rgba(0,0,0,0.4);
+      font-family: Arial, sans-serif;
+    }
+    .btn:active {
+      transform: translateY(3px);
+      box-shadow: none;
+    }
+
+    /* Color Classes */
+    .btn-gray { background-color: #797a7e; }
+    .btn-black { background-color: #222222; }
+    .btn-red { background-color: #c9405e; }
+
+    /* Tall Button */
+    .btn-tall { grid-row: span 2; }
+  </style>
+</head>
+<body>
+
+  <div class="calculator">
+    <div class="screen" id="screen">0</div>
+    
+    <div class="tax-row">
+      <button class="btn-tax">TAX-</button>
+      <button class="btn-tax">TAX+</button>
+    </div>
+
+    <div id="keypad"></div>
+  </div>
+
+  <script>
+    const keypadContainer = document.getElementById('keypad');
+    const screen = document.getElementById('screen');
+
+    // Calculator State Variables
+    let currentInput = '0';
+    let previousInput = null;
+    let currentOperator = null;
+    let waitingForNewNumber = false;
+
+    const buttonsData = [
+      { label: 'ON', type: 'btn-black', action: 'clear' },
+      { label: 'MRC', type: 'btn-black', action: 'ignore' },
+      { label: 'M-', type: 'btn-black', action: 'ignore' },
+      { label: 'M+', type: 'btn-black', action: 'ignore' },
+      { label: '÷', type: 'btn-black', action: 'operator' },
+      { label: '%', type: 'btn-black', action: 'percent' },
+      { label: '7', type: 'btn-gray', action: 'number' },
+      { label: '8', type: 'btn-gray', action: 'number' },
+      { label: '9', type: 'btn-gray', action: 'number' },
+      { label: '×', type: 'btn-black', action: 'operator' },
+      { label: '+/-', type: 'btn-black', action: 'toggle-sign' },
+      { label: '4', type: 'btn-gray', action: 'number' },
+      { label: '5', type: 'btn-gray', action: 'number' },
+      { label: '6', type: 'btn-gray', action: 'number' },
+      { label: '-', type: 'btn-black', action: 'operator' },
+      { label: 'C', type: 'btn-red', action: 'clear-entry' },
+      { label: '1', type: 'btn-gray', action: 'number' },
+      { label: '2', type: 'btn-gray', action: 'number' },
+      { label: '3', type: 'btn-gray', action: 'number' },
+      { label: '+', type: 'btn-black', extraClass: 'btn-tall', action: 'operator' },
+      { label: 'AC', type: 'btn-red', action: 'clear' },
+      { label: '0', type: 'btn-gray', action: 'number' },
+      { label: '.', type: 'btn-gray', action: 'decimal' },
+      { label: '=', type: 'btn-black', action: 'calculate' }
+    ];
+
+    // Helper: Update the screen text
+    function updateScreen() {
+      // Limit to 10 digits so it doesn't overflow the screen
+      if (currentInput.length > 10) {
+        screen.innerText = currentInput.substring(0, 10);
+      } else {
+        screen.innerText = currentInput;
+      }
+    }
+
+    // Helper: Do the math
+    function calculateResult(a, b, operator) {
+      const num1 = parseFloat(a);
+      const num2 = parseFloat(b);
+      if (isNaN(num1) || isNaN(num2)) return b;
+
+      let result = 0;
+      switch (operator) {
+        case '+': result = num1 + num2; break;
+        case '-': result = num1 - num2; break;
+        case '×': result = num1 * num2; break;
+        case '÷': 
+          if (num2 === 0) return 'Error'; // No dividing by zero!
+          result = num1 / num2; 
+          break;
+      }
+      // Fix floating point errors (like 0.1 + 0.2) and convert back to string
+      return String(Math.round(result * 10000000) / 10000000); 
+    }
+
+    // Build the grid and attach logic
+    buttonsData.forEach(data => {
+      const btn = document.createElement('button');
+      btn.innerText = data.label;
+      btn.classList.add('btn', data.type);
+      if (data.extraClass) btn.classList.add(data.extraClass);
+
+      btn.addEventListener('click', () => {
+        const val = data.label;
+        const action = data.action;
+
+        if (action === 'number') {
+          if (currentInput === '0' || waitingForNewNumber) {
+            currentInput = val;
+            waitingForNewNumber = false;
+          } else {
+            currentInput += val;
+          }
+        } 
+        
+        else if (action === 'decimal') {
+          if (waitingForNewNumber) {
+            currentInput = '0.';
+            waitingForNewNumber = false;
+          } else if (!currentInput.includes('.')) {
+            currentInput += '.';
+          }
+        }
+        
+        else if (action === 'operator') {
+          if (currentOperator && !waitingForNewNumber) {
+             currentInput = calculateResult(previousInput, currentInput, currentOperator);
+          }
+          previousInput = currentInput;
+          currentOperator = val;
+          waitingForNewNumber = true;
+        } 
+        
+        else if (action === 'calculate') {
+          if (currentOperator && previousInput !== null) {
+            currentInput = calculateResult(previousInput, currentInput, currentOperator);
+            previousInput = null;
+            currentOperator = null;
+            waitingForNewNumber = true;
+          }
+        } 
+        
+        else if (action === 'clear') {
+          currentInput = '0';
+          previousInput = null;
+          currentOperator = null;
+          waitingForNewNumber = false;
+        }
+        
+        else if (action === 'clear-entry') {
+          currentInput = '0';
+        }
+
+        else if (action === 'toggle-sign') {
+          currentInput = (parseFloat(currentInput) * -1).toString();
+        }
+
+        else if (action === 'percent') {
+          currentInput = (parseFloat(currentInput) / 100).toString();
+        }
+
+        updateScreen();
+      });
+
+      keypadContainer.appendChild(btn);
+    });
+
+  </script>
+</body>
+</html>

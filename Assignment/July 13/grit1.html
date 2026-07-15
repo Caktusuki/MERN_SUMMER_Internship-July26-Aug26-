@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS Inline Grid</title>
+</head>
+<body>
+
+    <script>
+        // 1. Create and style the main container
+        let container = document.createElement("div");
+
+        container.style.width = "700px";
+        container.style.height = "500px";
+        container.style.border = "2px solid black";
+        container.style.display = "grid";
+
+        container.style.gridTemplateColumns = "100px 1fr 1fr";
+        container.style.gridTemplateRows = "70px 170px 170px 90px";
+
+        // Attach container to the body
+        document.body.appendChild(container);
+
+        // 2. Loop to create the 6 boxes
+        for (let i = 1; i <= 6; i++) {
+            
+            let box = document.createElement("div");
+            
+            // Standard styling for all boxes
+            box.innerText = i;
+            box.style.border = "2px solid black";
+            box.style.display = "flex";
+            box.style.justifyContent = "center";
+            box.style.alignItems = "center";
+            box.style.fontSize = "30px";
+            if (i == 1) {
+                box.style.gridColumn = "1 / 4";
+            } 
+            else if (i == 2) {
+                box.style.gridRow = "2 / 4";
+            } 
+            else if (i == 5) {
+                box.style.gridColumn = "2 / 4";
+            } 
+            else if (i == 6) {
+
+                box.style.gridColumn = "1 / 4";
+            }
+
+            // 4. Attach the finished box into the container
+            container.appendChild(box);
+        }
+    </script>
+
+</body>
+</html>
