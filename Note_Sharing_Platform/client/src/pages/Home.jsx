@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../utils/api';
 
 const MOCK_NOTES = [
   {
@@ -10,6 +11,8 @@ const MOCK_NOTES = [
     downloads: 142,
     rating: 4.8,
     fileName: 'data-structures-u3.pdf',
+    color: 'blue',
+    type: 'PDF',
   },
   {
     id: 2,
@@ -19,6 +22,8 @@ const MOCK_NOTES = [
     downloads: 89,
     rating: 4.5,
     fileName: 'thermodynamics-notes.pdf',
+    color: 'green',
+    type: 'PDF',
   },
   {
     id: 3,
@@ -28,6 +33,8 @@ const MOCK_NOTES = [
     downloads: 215,
     rating: 4.9,
     fileName: 'operating-systems-qna.pdf',
+    color: 'amber',
+    type: 'PDF',
   },
   {
     id: 4,
@@ -37,6 +44,8 @@ const MOCK_NOTES = [
     downloads: 64,
     rating: 4.2,
     fileName: 'organic-chem-carbonyls.pdf',
+    color: 'pink',
+    type: 'PDF',
   },
   {
     id: 5,
@@ -46,6 +55,8 @@ const MOCK_NOTES = [
     downloads: 304,
     rating: 4.7,
     fileName: 'calculus-2-integration.pdf',
+    color: 'blue',
+    type: 'PDF',
   },
   {
     id: 6,
@@ -55,8 +66,17 @@ const MOCK_NOTES = [
     downloads: 188,
     rating: 4.6,
     fileName: 'dbms-sql-guide.pdf',
+    color: 'green',
+    type: 'PDF',
   },
 ];
+
+const STROKE_COLORS = {
+  blue: '#3D5AF1',
+  green: '#1F9D6E',
+  amber: '#D97706',
+  pink: '#E11D48',
+};
 
 function Home() {
   const username = localStorage.getItem('username') || 'Student';
@@ -64,10 +84,8 @@ function Home() {
   const [selectedSubject, setSelectedSubject] = useState('All');
   const [downloadMsg, setDownloadMsg] = useState('');
 
-  // Extract unique subjects
   const subjects = ['All', ...new Set(MOCK_NOTES.map((note) => note.subject))];
 
-  // Filter notes
   const filteredNotes = MOCK_NOTES.filter((note) => {
     const matchesSearch =
       note.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -86,138 +104,109 @@ function Home() {
   };
 
   return (
-    <div className="flex-1 bg-gray-50 py-12 px-8">
-      {/* Header section */}
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-12">
-        <div>
-          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-            Welcome, {username}!
-          </h1>
-          <p className="mt-2 text-gray-600 text-lg">
-            Discover, study, and share high-quality notes uploaded by fellow peers.
-          </p>
+    <>
+      <header>
+        <Link to="/dashboard" className="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span>NoteFi</span>
+        </Link>
+        <nav>
+          <Link to="/dashboard" className="active">Browse Notes</Link>
+          <Link to="/upload">Upload Note</Link>
+          <Link to="/profile">Profile</Link>
+        </nav>
+        <div className="nav-right">
+          <span className="avatar-mini">{username.charAt(0).toUpperCase()}</span>
+          <span className="text-sm font-medium" style={{ color: 'var(--accent)', background: 'var(--accent-soft)', padding: '4px 12px', borderRadius: '20px' }}>
+            Hi, {username}
+          </span>
+          <div className="divider"></div>
+          <Link to="/" onClick={() => { localStorage.removeItem('username'); }}>Log out</Link>
         </div>
-        <div>
-          <Link
-            to="/upload"
-            className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-medium px-5 py-3 rounded-lg shadow-sm transition-colors"
-          >
-            <span>📤</span> Upload Your Notes
-          </Link>
-        </div>
-      </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Left sidebar: filters */}
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-sm">
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-              Filter by Subject
-            </h3>
-            <div className="flex flex-col gap-2">
-              {subjects.map((subj) => (
-                <button
-                  key={subj}
-                  onClick={() => setSelectedSubject(subj)}
-                  className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                    selectedSubject === subj
-                      ? 'bg-purple-50 text-purple-700'
-                      : 'text-gray-600 hover:bg-gray-100/70 hover:text-gray-900'
-                  }`}
-                >
-                  {subj}
-                </button>
-              ))}
-            </div>
+      <main className="app-main">
+        <div className="app-head">
+          <div>
+            <h1 className="app-h1">Browse notes</h1>
+            <p className="app-sub">{MOCK_NOTES.length} notes shared by your classmates</p>
           </div>
-
-          {/* Quick tips card */}
-          <div className="bg-gradient-to-tr from-purple-900 to-indigo-800 text-white p-6 rounded-2xl shadow-sm">
-            <h4 className="font-bold text-lg mb-2">Presentation Demo</h4>
-            <p className="text-sm text-purple-200 leading-relaxed">
-              This is the live catalog dashboard. Try searching for "SQL" or "Calculus" to filter matching records immediately.
-            </p>
-          </div>
+          <Link to="/upload" className="btn-primary">Upload note</Link>
         </div>
 
-        {/* Right side: search and catalog list */}
-        <div className="lg:col-span-3 space-y-6">
-          {/* Search bar */}
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-400">
-              🔍
-            </span>
+        <div className="search-row">
+          <div className="search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="#8A8F9C" strokeWidth="1.8" />
+              <path d="m20 20-3.5-3.5" stroke="#8A8F9C" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
             <input
               type="text"
-              placeholder="Search by title, subject, or uploader name..."
+              placeholder="Search by title or course code..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 text-sm placeholder-gray-400"
             />
           </div>
+        </div>
 
-          {/* Downloading notification banner */}
-          {downloadMsg && (
-            <div className="bg-purple-50 border border-purple-200 text-purple-800 px-4 py-3 rounded-xl flex items-center gap-3 animate-pulse">
-              <svg className="animate-spin h-5 w-5 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span>{downloadMsg}</span>
-            </div>
-          )}
+        <div className="chip-row">
+          {subjects.map((s) => (
+            <button
+              key={s}
+              className={`chip ${selectedSubject === s ? 'chip-active' : ''}`}
+              onClick={() => setSelectedSubject(s)}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
 
-          {/* Notes Grid */}
-          {filteredNotes.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredNotes.map((note) => (
-                <div
-                  key={note.id}
-                  className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-semibold px-2.5 py-1 bg-purple-50 text-purple-700 rounded-full">
-                        {note.subject}
-                      </span>
-                      <span className="text-sm font-semibold text-amber-500 flex items-center gap-1">
-                        ★ {note.rating}
-                      </span>
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
-                      {note.title}
-                    </h3>
-                    <p className="text-xs text-gray-400 mb-6">
-                      Shared by <span className="font-semibold text-gray-600">{note.author}</span>
-                    </p>
-                  </div>
+        {downloadMsg && (
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl text-sm mb-4" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <svg className="animate-spin" width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" opacity="0.25" />
+              <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" opacity="0.75" />
+            </svg>
+            {downloadMsg}
+          </div>
+        )}
 
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <span className="text-xs text-gray-400 font-medium">
-                      📥 {note.downloads} downloads
+        {filteredNotes.length > 0 ? (
+          <div className="notes-grid">
+            {filteredNotes.map((note) => (
+              <Link to={`/notes/${note.id}`} key={note.id} className="note-card">
+                <div className={`note-icon icon-${note.color}`}>
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <path d="M6 2h9l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" stroke={STROKE_COLORS[note.color]} strokeWidth="1.7" strokeLinejoin="round" />
+                    <path d="M15 2v5h5" stroke={STROKE_COLORS[note.color]} strokeWidth="1.7" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <div className="note-card-body">
+                  <h3 className="note-card-title">{note.title}</h3>
+                  <p className="note-card-meta">{note.subject} · {note.author}</p>
+                  <div className="note-card-foot">
+                    <span className="stars-mini">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill={i < Math.round(note.rating) ? "#FFB020" : "none"} stroke={i < Math.round(note.rating) ? "#FFB020" : "#D4D2CA"}>
+                          <path d="M12 17.3 6.2 20.6l1.1-6.5L2.6 9.4l6.5-.9L12 2.6l2.9 5.9 6.5.9-4.7 4.7 1.1 6.5z" strokeWidth="1.4" strokeLinejoin="round" />
+                        </svg>
+                      ))}
                     </span>
-                    <button
-                      onClick={() => handleDownload(note.fileName)}
-                      className="bg-gray-900 hover:bg-gray-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      Download PDF
-                    </button>
+                    <span className="note-card-downloads">{note.downloads} downloads</span>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="bg-white border border-gray-200 rounded-2xl p-12 text-center shadow-sm">
-              <span className="text-4xl">📭</span>
-              <h3 className="mt-4 text-lg font-bold text-gray-900">No notes found</h3>
-              <p className="text-sm text-gray-500 mt-1">
-                Try searching for something else or clear the subject filter.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="empty-state">
+            No notes match your search yet. Try a different search term or subject.
+          </div>
+        )}
+      </main>
+    </>
   );
 }
 

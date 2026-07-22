@@ -1,20 +1,16 @@
-require('dotenv').config();
-const { Pool } = require('pg');
+const mongoose = require('mongoose');
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+    });
+    console.log(`MongoDB connected: ${conn.connection.host}`);
+  } catch (err) {
+    console.error(`\n⚠️  MongoDB connection FAILED: ${err.message}`);
+    console.error('   Check your MONGO_URI and Atlas IP whitelist.\n');
+    throw err;
+  }
+};
 
-pool.on('connect', () => {
-  console.log('Connected to PostgreSQL (Neon)');
-});
-
-pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-  process.exit(-1);
-});
-
-module.exports = pool;
+module.exports = connectDB;

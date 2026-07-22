@@ -1,58 +1,64 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
-function Navbar() {
+export default function Navbar() {
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
-  const username = localStorage.getItem('username');
+  const username = localStorage.getItem("username");
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await api.post("/api/auth/logout");
+    } catch {
+      // cookie might already be gone
+    }
+    localStorage.removeItem("username");
+    navigate("/");
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between">
-      <Link to="/" className="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <header>
+      <Link to={username ? "/dashboard" : "/"} className="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
-        <span className="text-2xl font-bold text-gray-900">NoteFi</span>
+        <span>NoteFi</span>
       </Link>
 
-      <div className="flex items-center gap-12 text-sm font-medium text-gray-500">
-        <Link to="/" className="hover:text-gray-900 transition-colors">Home</Link>
-        <Link to="/features" className="hover:text-gray-900 transition-colors">Feature</Link>
-        <Link to="/premium" className="hover:text-gray-900 transition-colors">Premium</Link>
-        <Link to="/how-it-works" className="hover:text-gray-900 transition-colors">How it Works</Link>
-      </div>
+      <nav>
+        <Link to={username ? "/dashboard" : "/"} className="active">Home</Link>
+        <Link to="/features">Feature</Link>
+        <Link to="/premium">Premium</Link>
+        <Link to="/how-it-works">How it Works</Link>
+      </nav>
 
-      <div className="flex items-center gap-4">
-        {token ? (
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-medium text-purple-600 bg-purple-50 px-3 py-1 rounded-full">
-              👋 Hi, {username}
-            </span>
+      <div className="nav-right">
+        {username ? (
+          <>
+            <Link to="/profile" className="nav-profile-link">
+              <span className="avatar-mini">
+                {username.charAt(0).toUpperCase()}
+              </span>
+              <span className="text-sm font-medium" style={{ color: 'var(--accent)', background: 'var(--accent-soft)', padding: '4px 12px', borderRadius: '20px' }}>
+                Hi, {username}
+              </span>
+            </Link>
+            <div className="divider"></div>
             <button
               onClick={handleLogout}
               className="text-sm font-medium text-gray-500 hover:text-red-600 transition-colors cursor-pointer"
+              style={{ background: "none", border: "none", cursor: "pointer" }}
             >
               Log out
             </button>
-          </div>
+          </>
         ) : (
-          <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
-              Log in
-            </Link>
-            <Link to="/register" className="bg-gray-900 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-800 transition-all">
-              Sign up
-            </Link>
-          </div>
+          <>
+            <Link to="/login">Log in</Link>
+            <div className="divider"></div>
+            <Link to="/register" className="btn-signup">Sign up</Link>
+          </>
         )}
       </div>
-    </nav>
-  )
+    </header>
+  );
 }
-
-export default Navbar

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Landing from "./pages/Landing";
 import Home from "./pages/Home";
@@ -11,15 +11,26 @@ import Features from "./pages/Features";
 import Premium from "./pages/Premium";
 import HowItWorks from "./pages/HowItWorks";
 import Contact from "./pages/Contact";
+import Dashboard from "./pages/Dashboard";
+
+function NavigationWrapper() {
+  const location = useLocation();
+  const hideNavbarPaths = ["/dashboard", "/home", "/profile", "/upload", "/notes"];
+  const shouldHide = hideNavbarPaths.some((path) => location.pathname.startsWith(path));
+
+  if (shouldHide) return null;
+  return <Navbar />;
+}
 
 function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-[#faf9f6] flex flex-col">
-        <Navbar />
+        <NavigationWrapper />
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/home" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/upload" element={<UploadNote />} />

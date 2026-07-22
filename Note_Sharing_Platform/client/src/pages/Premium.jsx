@@ -2,102 +2,88 @@ import { Link } from 'react-router-dom';
 
 function Premium() {
   return (
-    <div className="flex-1 bg-gray-50/50 py-24 px-8">
-      {/* Header */}
-      <div className="max-w-4xl mx-auto text-center mb-16 space-y-4">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 rounded-full text-xs font-semibold text-blue-600">
-          <span className="w-1.5 h-1.5 bg-blue-600 rounded-full"></span>
-          Premium
-        </div>
-        <h2 className="text-4xl font-extrabold text-gray-900 tracking-tight">
-          Take your studies further
-        </h2>
-        <p className="mt-4 text-gray-500 text-base max-w-xl mx-auto leading-relaxed">
-          Start free. Upgrade whenever unlimited downloads and<br />
-          priority processing start to matter.
-        </p>
+    <main className="simple">
+      <div className="eyebrow">
+        <span className="dot"></span>
+        Premium
       </div>
 
-      {/* Pricing Cards Grid */}
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-        
-        {/* Free Plan Card */}
-        <div className="bg-white border border-gray-200/80 rounded-3xl p-8 shadow-sm flex flex-col justify-between">
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900">Free</h3>
-              <p className="text-sm text-gray-400 mt-1">Good for getting started.</p>
-            </div>
-            
-            <div className="flex items-baseline">
-              <span className="text-4xl font-extrabold text-gray-900">$0</span>
-              <span className="text-gray-400 text-sm ml-2">/ month</span>
-            </div>
+      <h1>Take your studies further</h1>
 
-            <ul className="space-y-3.5 pt-4 border-t border-gray-50">
-              {['5 downloads a month', 'Standard upload speed', 'Browse peer reviews'].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-3 text-sm text-gray-500 font-medium">
-                  <span className="text-blue-600">✓</span> {item}
-                </li>
-              ))}
-            </ul>
+      <p className="sub">
+        Start free. Upgrade whenever unlimited downloads and
+        priority processing start to matter.
+      </p>
+
+      <div className="plans">
+        {/* Free Plan */}
+        <div className="plan-card">
+          <div className="plan-card-top">
+            <h2 className="plan-card-name">Free</h2>
+            <p className="plan-card-desc">Good for getting started.</p>
+            <div className="plan-card-price">
+              <span className="plan-card-amount">$0</span>
+              <span className="plan-card-period">/ month</span>
+            </div>
           </div>
 
-          <div className="pt-8">
-            <Link
-              to="/register"
-              className="block text-center w-full bg-white border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors text-sm shadow-sm"
-            >
-              Continue free
-            </Link>
-          </div>
+          <ul className="plan-card-features">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+              5 downloads a month
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+              Standard upload speed
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+              Browse peer reviews
+            </li>
+          </ul>
+
+          <Link to="/register" className="plan-card-btn">Continue free</Link>
         </div>
 
-        {/* Pro Plan Card */}
-        <div className="bg-white border-2 border-gray-900 rounded-3xl p-8 shadow-md flex flex-col justify-between relative">
-          {/* Best Value Badge */}
-          <div className="absolute -top-3.5 right-6 bg-[#0f172a] text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-            Best value
-          </div>
-
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900">Pro</h3>
-              <p className="text-sm text-gray-400 mt-1">Perfect for active college students.</p>
+        {/* Pro Plan */}
+        <div className="plan-card plan-card--featured">
+          <div className="plan-card-badge">Best value</div>
+          <div className="plan-card-top">
+            <h2 className="plan-card-name">Pro</h2>
+            <p className="plan-card-desc">Perfect for active college students.</p>
+            <div className="plan-card-price">
+              <span className="plan-card-amount">$4.99</span>
+              <span className="plan-card-period">/ month</span>
             </div>
-
-            <div className="flex items-baseline">
-              <span className="text-4xl font-extrabold text-gray-900">$4.99</span>
-              <span className="text-gray-400 text-sm ml-2">/ month</span>
-            </div>
-
-            <ul className="space-y-3.5 pt-4 border-t border-gray-50">
-              {[
-                'Unlimited note downloads',
-                'Ad-free experience',
-                'Early access to peer reviews',
-                'Priority upload processing',
-                'Verified badge on profile'
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-center gap-3 text-sm text-gray-500 font-medium">
-                  <span className="text-blue-600">✓</span> {item}
-                </li>
-              ))}
-            </ul>
           </div>
 
-          <div className="pt-8">
-            <Link
-              to="/register"
-              className="block text-center w-full bg-[#1e293b] text-white font-semibold py-3 rounded-xl hover:bg-slate-800 transition-colors text-sm shadow-sm"
-            >
-              Upgrade to premium
-            </Link>
-          </div>
+          <ul className="plan-card-features">
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+              Unlimited note downloads
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+              Ad-free experience
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+              Early access to peer reviews
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+              Priority upload processing
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M20 6L9 17l-5-5" /></svg>
+              Verified badge on profile
+            </li>
+          </ul>
+
+          <Link to="/register" className="plan-card-btn plan-card-btn--solid">Upgrade to premium</Link>
         </div>
-
       </div>
-    </div>
+    </main>
   );
 }
 
