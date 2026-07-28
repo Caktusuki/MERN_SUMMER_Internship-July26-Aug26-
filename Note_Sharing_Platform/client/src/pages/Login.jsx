@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
 function Login() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -42,8 +43,10 @@ function Login() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm" role="alert">
-            <span className="font-semibold">Error:</span> {error}
+          <div className="auth-error" role="alert">
+            <span className="auth-error-icon">!</span>
+            <span className="auth-error-msg">{error}</span>
+            <button className="auth-error-dismiss" onClick={() => setError('')} type="button">×</button>
           </div>
         )}
 
@@ -80,7 +83,7 @@ function Login() {
             <label>
               <input type="checkbox" /> Remember me
             </label>
-            <a href="#">Forgot password?</a>
+            <Link to="/forgot-password">Forgot password?</Link>
           </div>
 
           <button type="submit" className="btn-submit" disabled={loading}>

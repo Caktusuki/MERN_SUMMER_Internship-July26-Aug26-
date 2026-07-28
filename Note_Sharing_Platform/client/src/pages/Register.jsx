@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
 function Register() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -30,14 +31,13 @@ function Register() {
     setLoading(true);
 
     try {
-      const res = await api.post('/api/auth/signup', {
+      await api.post('/api/auth/signup', {
         username: formData.username,
         email: formData.email,
         password: formData.password,
       });
 
-      localStorage.setItem('username', res.data.username);
-      window.location.href = '/home';
+      navigate('/verify-email', { state: { email: formData.email } });
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong. Please try again.');
     } finally {
@@ -54,8 +54,10 @@ function Register() {
         </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm" role="alert">
-            <span className="font-semibold">Error:</span> {error}
+          <div className="auth-error" role="alert">
+            <span className="auth-error-icon">!</span>
+            <span className="auth-error-msg">{error}</span>
+            <button className="auth-error-dismiss" onClick={() => setError('')} type="button">×</button>
           </div>
         )}
 

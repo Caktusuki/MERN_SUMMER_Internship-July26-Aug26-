@@ -18,11 +18,15 @@ const authRoutes = require('./routes/authRoutes');
 const noteRoutes = require('./routes/noteRoutes');
 const ratingRoutes = require('./routes/ratingRoutes');
 const userRoutes = require('./routes/userRoutes');
+const aiRoutes = require('./routes/aiRoutes');
+const chatbotRoutes = require('./routes/chatbotRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', noteRoutes);
 app.use('/api/notes/:id/ratings', ratingRoutes);
+app.use('/api/notes/:id', aiRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });

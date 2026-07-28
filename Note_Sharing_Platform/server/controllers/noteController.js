@@ -98,4 +98,24 @@ const getMyNotes = async (req, res, next) => {
   }
 };
 
-module.exports = { createNote, getNotes, getNoteById, downloadNote, getMyNotes };
+const updateNote = async (req, res, next) => {
+  try {
+    const note = await Note.findById(req.params.id);
+    if (!note) {
+      return res.status(404).json({ message: 'Note not found' });
+    }
+    if (note.uploader.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized' });
+    }
+    const allowed = ['summary', 'tags'];
+    allowed.forEach((field) => {
+      if (req.body[field] !== undefined) note[field] = req.body[field];
+    });
+    await note.save();
+    res.json(note);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createNote, getNotes, getNoteById, downloadNote, getMyNotes, updateNote };

@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom'
+import { Boxes } from '../components/ui/background-boxes'
 
 function Landing() {
   const username = localStorage.getItem('username');
 
   return (
-    <div className="hero">
+    <div className="relative w-full min-h-screen overflow-hidden bg-white flex flex-col items-center justify-start">
+      <div className="absolute inset-0 z-0" style={{ maskImage: 'radial-gradient(transparent 30%, white 70%)', WebkitMaskImage: 'radial-gradient(transparent 30%, white 70%)' }}>
+        <Boxes />
+      </div>
+      <div className="hero relative z-10">
       {/* Left Column: Hero Text */}
       <div>
         <div className="eyebrow">
@@ -26,7 +31,7 @@ function Landing() {
         <div className="cta-row">
           {username ? (
             <>
-              <Link to="/home" className="btn-primary">Go to Dashboard</Link>
+              <Link to="/home" className="btn-hero">Go to Dashboard</Link>
               <Link to="/contact" className="btn-secondary">Contact us</Link>
             </>
           ) : (
@@ -87,6 +92,7 @@ function Landing() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   )
 }

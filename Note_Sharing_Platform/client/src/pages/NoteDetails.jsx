@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import AppNavbar from "../components/AppNavbar";
 import api from "../utils/api";
+import { setCurrentNote } from "../utils/noteContext";
 
 const STROKES = { blue: "#3D5AF1", green: "#1F9D6E", amber: "#D97706", pink: "#E11D48" };
 const COLORS = ["blue", "green", "amber", "pink"];
@@ -33,6 +34,19 @@ export default function NoteDetail() {
   const [rating, setRating] = useState(5);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [summarizing, setSummarizing] = useState(false);
+  const [summary, setSummary] = useState("");
+  const [tags, setTags] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+
+  useEffect(() => {
+    if (previewOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [previewOpen]);
 
   useEffect(() => {
     const fetchNote = async () => {
@@ -43,6 +57,17 @@ export default function NoteDetail() {
         ]);
         setNote(noteRes.data);
         setReviews(reviewsRes.data);
+        if (noteRes.data.summary) {
+          setSummary(noteRes.data.summary);
+          setTags(noteRes.data.tags || []);
+        }
+        setCurrentNote({
+          title: noteRes.data.title,
+          subject: noteRes.data.subject,
+          course: noteRes.data.course,
+          description: noteRes.data.description,
+          summary: noteRes.data.summary,
+        });
       } catch {
         setNote(null);
       } finally {
@@ -58,6 +83,22 @@ export default function NoteDetail() {
       window.open(res.data.fileUrl, "_blank");
     } catch {
       alert("Failed to download note.");
+    }
+  };
+
+  const handleSummarize = async (regenerate = false) => {
+    setSummarizing(true);
+    try {
+      if (regenerate) {
+        await api.put(`/api/notes/${id}`, { summary: '', tags: [] });
+      }
+      const res = await api.post(`/api/notes/${id}/summarize`);
+      setSummary(res.data.summary);
+      setTags(res.data.tags || []);
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to generate summary.");
+    } finally {
+      setSummarizing(false);
     }
   };
 
@@ -120,7 +161,7 @@ export default function NoteDetail() {
           </div>
           <div>
             <h1 className="app-h1" style={{ marginBottom: 6 }}>{note.title}</h1>
-            <p className="app-sub" style={{ margin: 0 }}>{note.subject} · {note.course} · Shared by {uploader}</p>
+            <p className="app-sub" style={{ margin: 0 }}>{note.subject} · {note.course || "—"} · Shared by {uploader}</p>
           </div>
         </div>
 
@@ -130,7 +171,54 @@ export default function NoteDetail() {
           {note.fileType && <div className="detail-stat-label">{note.fileType.toUpperCase()}</div>}
         </div>
 
-        <button className="btn-primary" style={{ marginTop: 4 }} onClick={handleDownload}>Download note</button>
+        <div className="detail-actions">
+          <button className="btn-primary" onClick={handleDownload}>Download note</button>
+          <button className="btn-secondary" onClick={() => setPreviewOpen(true)}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            Preview
+          </button>
+          <button className="btn-ai" onClick={() => handleSummarize(!!summary)} disabled={summarizing}>
+            {summarizing ? (
+              <>
+                <svg className="ai-spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v4m0 12v4m-7.07-3.93 2.83-2.83m8.48-8.48 2.83-2.83M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83" strokeLinecap="round" /></svg>
+                Generating...
+              </>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+                {summary ? "Regenerate summary" : "Generate AI Summary"}
+              </>
+            )}
+          </button>
+        </div>
+
+        {summary && (
+          <div className="detail-section ai-summary">
+            <h3 className="detail-h3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                <path d="M2 17l10 5 10-5" />
+                <path d="M2 12l10 5 10-5" />
+              </svg>
+              AI Summary
+            </h3>
+            <p className="detail-desc">{summary}</p>
+            {tags.length > 0 && (
+              <div className="ai-tags">
+                {tags.map((tag, i) => (
+                  <span key={i} className="ai-tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {note.description && (
           <div className="detail-section">
@@ -176,6 +264,24 @@ export default function NoteDetail() {
           </div>
         </div>
       </main>
+
+      {previewOpen && (
+        <div className="preview-overlay" onClick={() => setPreviewOpen(false)}>
+          <div className="preview-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="preview-header">
+              <span className="preview-title">{note.title}</span>
+              <button className="preview-close" onClick={() => setPreviewOpen(false)}>×</button>
+            </div>
+            <div className="preview-body">
+              <iframe
+                src={`https://docs.google.com/gview?url=${encodeURIComponent(note.fileUrl)}&embedded=true`}
+                title="Note preview"
+                className="preview-frame"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
