@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const Note = require('../models/Note');
-const Rating = require('../models/Rating');
 
 const getProfile = async (req, res, next) => {
   try {
@@ -12,13 +11,13 @@ const getProfile = async (req, res, next) => {
     ]);
     const totalDownloads = downloadStats.length > 0 ? downloadStats[0].totalDownloads : 0;
 
-    const avgRatingStats = await Rating.aggregate([
-      { $match: { note: { $in: await Note.find({ uploader: req.user._id }).distinct('_id') } } },
-      { $group: { _id: null, avgRating: { $avg: '$rating' } } },
+    const voteStats = await Note.aggregate([
+      { $match: { uploader: req.user._id } },
+      { $group: { _id: null, totalUpvotes: { $sum: '$upvotes' }, totalDownvotes: { $sum: '$downvotes' } } },
     ]);
-    const avgRating = avgRatingStats.length > 0
-      ? Math.round(avgRatingStats[0].avgRating * 10) / 10
-      : 0;
+    const totalUpvotes = voteStats.length > 0 ? voteStats[0].totalUpvotes : 0;
+    const totalDownvotes = voteStats.length > 0 ? voteStats[0].totalDownvotes : 0;
+    const netScore = totalUpvotes - totalDownvotes;
 
     res.json({
       _id: req.user._id,
@@ -29,7 +28,9 @@ const getProfile = async (req, res, next) => {
       stats: {
         notesCount,
         totalDownloads,
-        avgRating,
+        totalUpvotes,
+        totalDownvotes,
+        netScore,
       },
     });
   } catch (error) {

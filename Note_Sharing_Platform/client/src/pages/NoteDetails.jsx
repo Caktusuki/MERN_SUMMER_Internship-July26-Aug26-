@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import AppNavbar from "../components/AppNavbar";
+import CommentThread from "../components/CommentThread";
 import api from "../utils/api";
 import { setCurrentNote } from "../utils/noteContext";
 
@@ -12,32 +13,23 @@ function getColor(title) {
   return COLORS[hash % COLORS.length];
 }
 
-function Stars({ rating, size = 16 }) {
-  const full = Math.round(rating);
-  return (
-    <span className="stars-mini">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width={size} height={size} viewBox="0 0 24 24" fill={i < full ? "#FFB020" : "none"} stroke={i < full ? "#FFB020" : "#D4D2CA"}>
-          <path d="M12 17.3 6.2 20.6l1.1-6.5L2.6 9.4l6.5-.9L12 2.6l2.9 5.9 6.5.9-4.7 4.7 1.1 6.5z" strokeWidth="1.4" strokeLinejoin="round" />
-        </svg>
-      ))}
-    </span>
-  );
-}
-
 export default function NoteDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [note, setNote] = useState(null);
-  const [reviews, setReviews] = useState([]);
-  const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(5);
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
   const [summarizing, setSummarizing] = useState(false);
   const [summary, setSummary] = useState("");
   const [tags, setTags] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [upvotes, setUpvotes] = useState(0);
+  const [downvotes, setDownvotes] = useState(0);
+  const [myVote, setMyVote] = useState(null);
+  const [commentTree, setCommentTree] = useState([]);
+  const [commentVotes, setCommentVotes] = useState({});
+  const [commentText, setCommentText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
     if (previewOpen) {
@@ -48,15 +40,28 @@ export default function NoteDetail() {
     return () => { document.body.style.overflow = ''; };
   }, [previewOpen]);
 
+  const fetchComments = useCallback(async () => {
+    try {
+      const [cr, cvr] = await Promise.all([
+        api.get(`/api/notes/${id}/comments`),
+        api.get(`/api/notes/${id}/comments/votes`).catch(() => ({ data: {} })),
+      ]);
+      setCommentTree(cr.data);
+      setCommentVotes(cvr.data);
+    } catch { /* noop */ }
+  }, [id]);
+
   useEffect(() => {
     const fetchNote = async () => {
       try {
-        const [noteRes, reviewsRes] = await Promise.all([
+        const [noteRes, meRes] = await Promise.all([
           api.get(`/api/notes/${id}`),
-          api.get(`/api/notes/${id}/ratings`),
+          api.get('/api/auth/me').catch(() => ({ data: null })),
         ]);
         setNote(noteRes.data);
-        setReviews(reviewsRes.data);
+        setCurrentUser(meRes.data);
+        setUpvotes(noteRes.data.upvotes || 0);
+        setDownvotes(noteRes.data.downvotes || 0);
         if (noteRes.data.summary) {
           setSummary(noteRes.data.summary);
           setTags(noteRes.data.tags || []);
@@ -68,6 +73,11 @@ export default function NoteDetail() {
           description: noteRes.data.description,
           summary: noteRes.data.summary,
         });
+
+        const voteRes = await api.get(`/api/notes/${id}/vote`).catch(() => ({ data: { type: null } }));
+        setMyVote(voteRes.data.type);
+
+        await fetchComments();
       } catch {
         setNote(null);
       } finally {
@@ -75,7 +85,7 @@ export default function NoteDetail() {
       }
     };
     fetchNote();
-  }, [id]);
+  }, [id, fetchComments]);
 
   const handleDownload = async () => {
     try {
@@ -86,13 +96,46 @@ export default function NoteDetail() {
     }
   };
 
+  const handleVote = async (type) => {
+    try {
+      const res = await api.post(`/api/notes/${id}/vote`, { type });
+      setUpvotes(res.data.upvotes);
+      setDownvotes(res.data.downvotes);
+      setMyVote(myVote === type ? null : type);
+    } catch { /* noop */ }
+  };
+
+  const handleNewComment = async (e) => {
+    e.preventDefault();
+    if (!commentText.trim()) return;
+    setSubmitting(true);
+    try {
+      await api.post(`/api/notes/${id}/comments`, { text: commentText });
+      setCommentText("");
+      await fetchComments();
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to post comment.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleCommentVote = useCallback((commentId, type, up, down) => {
+    setCommentVotes(prev => ({ ...prev, [commentId]: type }));
+    const updateTree = (nodes) =>
+      nodes.map(n => {
+        if (n._id === commentId) return { ...n, upvotes: up, downvotes: down };
+        if (n.replies) return { ...n, replies: updateTree(n.replies) };
+        return n;
+      });
+    setCommentTree(prev => updateTree(prev));
+  }, []);
+
   const handleSummarize = async (regenerate = false) => {
     setSummarizing(true);
     try {
-      if (regenerate) {
-        await api.put(`/api/notes/${id}`, { summary: '', tags: [] });
-      }
-      const res = await api.post(`/api/notes/${id}/summarize`);
+      const url = regenerate ? `/api/notes/${id}/summarize?force=true` : `/api/notes/${id}/summarize`;
+      const res = await api.post(url);
       setSummary(res.data.summary);
       setTags(res.data.tags || []);
     } catch (err) {
@@ -102,22 +145,12 @@ export default function NoteDetail() {
     }
   };
 
-  const handleReview = async (e) => {
-    e.preventDefault();
-    if (!comment.trim()) return;
-    setSubmitting(true);
-    try {
-      await api.post(`/api/notes/${id}/ratings`, { rating, comment });
-      const res = await api.get(`/api/notes/${id}/ratings`);
-      setReviews(res.data);
-      setComment("");
-      setRating(5);
-    } catch (err) {
-      alert(err.response?.data?.message || "Failed to post review.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  function countAll(c) {
+    let n = 1;
+    if (c.replies) c.replies.forEach(r => { n += countAll(r); });
+    return n;
+  }
+  const totalComments = commentTree.reduce((sum, c) => sum + countAll(c), 0);
 
   if (loading) {
     return (
@@ -142,9 +175,9 @@ export default function NoteDetail() {
   }
 
   const color = note.color || getColor(note.title);
-  const stroke = note.stroke || STROKES[color];
+  const stroke = note.color ? STROKES[note.color] : STROKES[color];
   const uploader = note.uploader?.username || note.uploader || "Unknown";
-  const avgRating = note.avgRating || 0;
+  const netScore = upvotes - downvotes;
 
   return (
     <>
@@ -166,9 +199,32 @@ export default function NoteDetail() {
         </div>
 
         <div className="detail-stats">
-          <div><Stars rating={avgRating} /> <span className="detail-stat-label">{avgRating > 0 ? avgRating.toFixed(1) : "No"} rating</span></div>
-          <div className="detail-stat-label">{note.downloads || 0} downloads</div>
+          <div>{note.downloads || 0} downloads</div>
           {note.fileType && <div className="detail-stat-label">{note.fileType.toUpperCase()}</div>}
+        </div>
+
+        <div className="vote-row">
+          <button
+            className={`vote-btn ${myVote === "up" ? "vote-active-up" : ""}`}
+            onClick={() => handleVote("up")}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 19V5m0 0-7 7m7-7 7 7" />
+            </svg>
+            {upvotes}
+          </button>
+          <button
+            className={`vote-btn ${myVote === "down" ? "vote-active-down" : ""}`}
+            onClick={() => handleVote("down")}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 5v14m0 0 7-7m-7 7-7-7" />
+            </svg>
+            {downvotes}
+          </button>
+          <span className="vote-net" style={{ color: netScore > 0 ? "#1F9D6E" : netScore < 0 ? "#C0362C" : "var(--ink-soft)" }}>
+            {netScore >= 0 ? "+" : ""}{netScore}
+          </span>
         </div>
 
         <div className="detail-actions">
@@ -228,39 +284,38 @@ export default function NoteDetail() {
         )}
 
         <div className="detail-section">
-          <h3 className="detail-h3">Peer reviews ({reviews.length})</h3>
+          <h3 className="detail-h3">Comments ({totalComments})</h3>
 
-          <form className="review-form" onSubmit={handleReview}>
-            <div className="review-stars-input">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button type="button" key={n} className="star-btn" onClick={() => setRating(n)} aria-label={`Rate ${n}`}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill={n <= rating ? "#FFB020" : "none"} stroke={n <= rating ? "#FFB020" : "#D4D2CA"}>
-                    <path d="M12 17.3 6.2 20.6l1.1-6.5L2.6 9.4l6.5-.9L12 2.6l2.9 5.9 6.5.9-4.7 4.7 1.1 6.5z" strokeWidth="1.4" strokeLinejoin="round" />
-                  </svg>
-                </button>
-              ))}
-            </div>
+          <div className="comment-form">
             <textarea
               rows="3"
-              placeholder="Leave a review for other students..."
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            ></textarea>
-            <button type="submit" className="btn-secondary" style={{ alignSelf: "flex-start" }} disabled={submitting}>
-              {submitting ? "Posting..." : "Post review"}
+              placeholder="What do you think?"
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+            <button className="btn-primary btn-sm" onClick={handleNewComment} disabled={submitting}>
+              {submitting ? "Posting..." : "Comment"}
             </button>
-          </form>
+          </div>
 
-          <div className="review-list">
-            {reviews.map((r) => (
-              <div className="review-item" key={r._id}>
-                <div className="review-item-head">
-                  <span className="review-name">{r.user?.username || "Anonymous"}</span>
-                  <Stars rating={r.rating} size={13} />
-                </div>
-                {r.comment && <p className="review-comment">{r.comment}</p>}
-              </div>
+          <div className="thread-container">
+            {commentTree.map(c => (
+              <CommentThread
+                key={c._id}
+                comment={c}
+                noteId={id}
+                depth={0}
+                myVotes={commentVotes}
+                onVote={handleCommentVote}
+                onReplyPosted={fetchComments}
+                currentUserId={currentUser?._id}
+              />
             ))}
+            {commentTree.length === 0 && (
+              <div className="empty-state" style={{ marginTop: 16 }}>
+                <p className="empty-state-text">No comments yet. Be the first!</p>
+              </div>
+            )}
           </div>
         </div>
       </main>

@@ -11,7 +11,7 @@ const summarizeNote = async (req, res, next) => {
       return res.status(404).json({ message: 'Note not found' });
     }
 
-    if (note.summary) {
+    if (note.summary && !req.query.force) {
       return res.json({ summary: note.summary, tags: note.tags });
     }
 

@@ -54,11 +54,7 @@ export default function Profile() {
 
   const initials = (user.username || "?").charAt(0).toUpperCase();
   const totalDownloads = notes.reduce((sum, n) => sum + (n.downloads || 0), 0);
-  const ratedNotes = notes.filter((n) => n.avgRating > 0);
-  const avgRating =
-    ratedNotes.length > 0
-      ? (ratedNotes.reduce((sum, n) => sum + n.avgRating, 0) / ratedNotes.length).toFixed(1)
-      : "—";
+  const netScore = notes.reduce((sum, n) => sum + (n.upvotes || 0) - (n.downvotes || 0), 0);
 
   return (
     <>
@@ -82,8 +78,8 @@ export default function Profile() {
             <div className="stat-label">Total downloads</div>
           </div>
           <div className="stat-card">
-            <div className="stat-value">{avgRating}</div>
-            <div className="stat-label">Average rating</div>
+            <div className="stat-value">{netScore >= 0 ? "+" : ""}{netScore}</div>
+            <div className="stat-label">Net votes</div>
           </div>
         </div>
 

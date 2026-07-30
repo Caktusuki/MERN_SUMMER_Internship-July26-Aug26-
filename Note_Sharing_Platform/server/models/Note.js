@@ -37,7 +37,11 @@ const noteSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  avgRating: {
+  upvotes: {
+    type: Number,
+    default: 0,
+  },
+  downvotes: {
     type: Number,
     default: 0,
   },

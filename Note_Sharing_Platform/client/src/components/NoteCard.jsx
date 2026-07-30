@@ -18,7 +18,7 @@ export default function NoteCard({ note }) {
   const noteId = note._id || note.id;
   const color = getColor(note);
   const stroke = note.stroke || STROKES[color];
-  const rating = note.avgRating || note.rating || 0;
+  const netScore = (note.upvotes || 0) - (note.downvotes || 0);
   const uploader = note.uploader?.username || note.uploader || "";
 
   return (
@@ -45,10 +45,10 @@ export default function NoteCard({ note }) {
 
       <div className="note-card-foot">
         <div className="note-stat">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="#FFB020" stroke="#FFB020" strokeWidth="1.4" strokeLinejoin="round">
-            <path d="M12 17.3 6.2 20.6l1.1-6.5L2.6 9.4l6.5-.9L12 2.6l2.9 5.9 6.5.9-4.7 4.7 1.1 6.5z" />
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 19V5m0 0-7 7m7-7 7 7" />
           </svg>
-          <span>{rating > 0 ? rating.toFixed(1) : "—"}</span>
+          <span>{netScore >= 0 ? "+" : ""}{netScore}</span>
         </div>
         <div className="note-stat-divider" />
         <div className="note-stat">
