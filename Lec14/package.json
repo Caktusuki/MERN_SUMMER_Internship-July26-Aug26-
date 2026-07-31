@@ -1,17 +1,17 @@
 {
-  "dependencies": {
-    "express": "^5.2.1"
-  },
-  "name": "lec14",
+  "name": "lec_14",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.8.0"
+  }
 }
