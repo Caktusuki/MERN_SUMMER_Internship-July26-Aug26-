@@ -202,14 +202,12 @@ Because frontend (Vercel) and backend (Render) are on different domains, the bac
 
 ## Screenshots
 
-| Screenshot | Link |
-|---|---|
-| Home | ![Home](Screenshots/Home.png) |
-| Login | ![Login](Screenshots/Login.png) |
-| Register / Sign Up | ![Sign Up](Screenshots/SignIn.png) |
-| Chatbot | ![Chatbot](Screenshots/ChatBot.png) |
-| Dashboard | ![Dashboard](Screenshots/Dashboard.png) |
-| Profile | ![Profile](Screenshots/Profile.png) |
+- `Screenshots/Home.png` — Home page
+- `Screenshots/Login.png` — Login page
+- `Screenshots/SignIn.png` — Register / Sign Up page
+- `Screenshots/ChatBot.png` — Chatbot
+- `Screenshots/Dashboard.png` — Dashboard
+- `Screenshots/Profile.png` — Profile page
 
 ---
 
