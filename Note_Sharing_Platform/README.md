@@ -225,3 +225,7 @@ Because frontend (Vercel) and backend (Render) are on different domains, the bac
 ## License
 
 This project is for academic/educational purposes (MERN Summer Internship).
+
+## Credits
+
+Created through ChatGPT.

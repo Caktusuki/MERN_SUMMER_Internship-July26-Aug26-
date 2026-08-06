@@ -103,3 +103,7 @@ Each folder (`Lec*`, `Assignment`, `Note_Sharing_Platform`) is self-contained �
 ## 📌 License
 
 This repository is for academic/educational purposes as part of a MERN Stack Summer Internship (July–Aug 2026).
+
+## 🤖 Credits
+
+Created through ChatGPT.
