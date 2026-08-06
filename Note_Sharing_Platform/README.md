@@ -204,12 +204,12 @@ Because frontend (Vercel) and backend (Render) are on different domains, the bac
 
 | Screenshot | Link |
 |---|---|
-| Home | _(add screenshot here)_ |
-| Login | _(add screenshot here)_ |
-| Register | _(add screenshot here)_ |
-| Note details + comments | _(add screenshot here)_ |
-| Chatbot | _(add screenshot here)_ |
-| Dashboard / Profile | _(add screenshot here)_ |
+| Home | ![Home](Screenshots/Home.png) |
+| Login | ![Login](Screenshots/Login.png) |
+| Register / Sign Up | ![Sign Up](Screenshots/SignIn.png) |
+| Chatbot | ![Chatbot](Screenshots/ChatBot.png) |
+| Dashboard | ![Dashboard](Screenshots/Dashboard.png) |
+| Profile | ![Profile](Screenshots/Profile.png) |
 
 ---
 
