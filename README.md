@@ -1,227 +1,105 @@
-# NoteFi — Note Sharing Platform
+# MERN Summer Internship (July '26 – Aug '26)
 
-A full-stack MERN application for sharing and discovering study notes. Users can upload notes, browse, search, vote, and comment on notes (Reddit-style nested threads), use AI-powered summarization and recommendations, and chat with an AI study assistant.
-
----
-
-## Tech Stack
-
-**Frontend**
-- React 19 + Vite
-- React Router v7
-- Tailwind CSS v4
-- Axios
-
-**Backend**
-- Node.js + Express 5
-- MongoDB + Mongoose 8
-- JWT authentication (httpOnly cookies)
-- Cloudinary (file storage)
-- Resend (email verification & password reset)
-- Google Gemini AI (summarization)
-- Groq (AI chatbot & recommendations)
+> Day-by-day progress log for a **MERN Stack Summer Internship** — daily lecture exercises, standalone assignments, and the full-stack capstone project **NoteFi** (a note-sharing platform).
 
 ---
 
-## Features
-
-- 🔐 **Authentication** — signup with email verification, login, forgot/reset password, logout
-- 👁️ **Password visibility toggle** on login & registration forms
-- 📄 **Note upload & sharing** — PDF, DOC, PPT with subject/course/tags
-- 🔍 **Browse & search** notes
-- ⬆️⬇️ **Voting** — upvote/downvote notes and comments
-- 💬 **Comments** — Reddit-style nested threaded replies, per-comment voting, collapse/expand, edit & delete
-- 🤖 **AI features** — one-click note summarization and personalized recommendations
-- 💬 **AI Chatbot** — ask questions about your notes
-- ⭐ **Premium page** — upgrade/membership info
-- 👤 **Profile** — view stats, edit bio
-
----
-
-## Project Structure
+## 📁 Repository Structure
 
 ```
-Note_Sharing_Platform/
-├── client/                  # React + Vite frontend
-│   ├── src/
-│   │   ├── components/      # Navbar, NoteCard, Chatbot, CommentThread, etc.
-│   │   ├── pages/           # Login, Register, Home, Dashboard, UploadNote, ...
-│   │   └── utils/api.js     # Axios instance (VITE_API_URL)
-│   ├── vercel.json          # SPA rewrite rules
-│   └── vite.config.js
-└── server/                  # Express backend
-    ├── config/              # DB, Cloudinary, Gemini, Groq config
-    ├── controllers/         # auth, notes, votes, comments, AI, chatbot, users
-    ├── middleware/          # auth (protect), upload, error handler
-    ├── models/              # User, Note, Vote, Comment, CommentVote
-    ├── routes/
-    └── server.js
+MERN_SUMMER_Internship-July26-Aug26-/
+├── .postman/                # Postman workspace metadata
+├── postman/                 # Postman workspace — collections & environments (API testing)
+├── Assignment/              # Daily assignments, organised by date (July 1 → July 29)
+├── Lec1/  →  Lec16/         # Daily lecture folders (HTML/CSS → JS → Node/Express → React)
+├── Note_Sharing_Platform/   # 🚀 Capstone — NoteFi (full-stack MERN app)
+└── README.md
 ```
+
+Each folder is self-contained — `cd` into it and follow that folder's own README (where present).
 
 ---
 
-## Setup (Local Development)
+## 🗓️ Lecture-by-Lecture Breakdown
 
-### Prerequisites
+The internship follows a day-by-day schedule: frontend fundamentals first (HTML/CSS/JavaScript), then the backend (Node.js → Express → MongoDB), and finally React, which feeds into the capstone project.
+
+| Folder | Topic |
+|---|---|
+| **Lec1** | HTML fundamentals — forms, tables & lists |
+| **Lec2** | CSS — selectors (class/id), inline/internal/external styles, box model, Flexbox, Grid & positioning |
+| **Lec3** | Assignment day — notes for the Medium & Coding Blocks clones |
+| **Lec4** | JavaScript — variables, `let` vs `var` scope, hoisting, arrays & objects; CSS animations |
+| **Lec5** | JavaScript — functions, arrow functions, closures, currying & higher-order functions |
+| **Lec6** | JavaScript — array methods (`map`, `filter`, `reduce`) & arrays of objects |
+| **Lec7** | JavaScript — DOM manipulation, Promises & chaining, `setInterval`/`setTimeout` |
+| **Lec8** | Node.js — core modules (`fs` sync/async) & custom modules (`module.exports`) |
+| **Lec9** | Node.js — HTTP module: first server with routing & serving HTML |
+| **Lec10** | Express — first app, routes & serving files |
+| **Lec11** | Express — routing with query strings & URL params |
+| **Lec12** | Express — serving JSON mock data & filtering by id |
+| **Lec13** | Express — modular routes scaffold (`app.js` + `routes/`) |
+| **Lec14** | MongoDB + Mongoose — schema/model, controllers, routes & DB connection (full CRUD) |
+| **Lec15** | Express auth — register/login with bcrypt password hashing |
+| **Lec16 / adtu** | React + Vite — first app, `useState` & props (Card component) |
+
+> Note: Lecture numbering follows the internship's daily schedule and may skip a day (e.g., review/no-code days).
+
+---
+
+## 📝 Assignment
+
+The `Assignment/` folder holds standalone daily exercises, organised by date:
+
+| Date | Content |
+|---|---|
+| **July 1** | Java pattern programs |
+| **July 3** | HTML/CSS clones — Medium & Coding Blocks |
+| **July 6 – 7** | JavaScript exercises (closures, buttons) |
+| **July 13** | CSS Grid & calculator |
+| **July 15 – 16** | JavaScript exercises |
+| **July 20 – 29** | Work in progress |
+
+HTML/CSS/JS exercises run directly in the browser; Java files run via your Java toolchain.
+
+---
+
+## 🚀 Capstone Project: NoteFi
+
+The main project of the internship lives in **`Note_Sharing_Platform/`** — a full-stack MERN application for sharing and discovering study notes.
+
+**Highlights:**
+- 🔐 Authentication with email verification (JWT, httpOnly cookies)
+- 📄 Note upload & sharing (PDF/DOC/PPT)
+- 🔍 Browse, search & vote on notes
+- 💬 Reddit-style nested comment threads
+- 🤖 AI-powered summarization (Gemini) & recommendations (Groq)
+- 💬 AI chatbot for Q&A on notes
+- ⭐ Premium page & user profiles
+
+**Tech stack:** React 19 + Vite · Tailwind CSS v4 · Node.js/Express 5 · MongoDB/Mongoose 8 · Cloudinary · Resend · Google Gemini · Groq
+
+👉 Full setup, environment variables, API routes, and deployment instructions are documented in the project's own README:
+**[`Note_Sharing_Platform/README.md`](./Note_Sharing_Platform/README.md)**
+
+---
+
+## 🧰 API Testing
+
+The `.postman/` and `postman/` folders set up a Postman workspace for testing the backend routes used across the lecture exercises and the NoteFi API. Open the workspace in Postman's Local View and drop collections in `postman/collections/` to try out the endpoints.
+
+---
+
+## 🛠️ General Prerequisites
+
 - Node.js 18+
-- MongoDB (Atlas or local)
-- Accounts: Cloudinary, Resend, Google AI (Gemini), Groq
+- MongoDB (Atlas or local) — required for Lec14+ and NoteFi
+- npm
 
-### 1. Backend
-
-```bash
-cd server
-npm install
-cp .env.example .env   # or create .env manually
-npm run dev            # starts on http://localhost:5000
-```
-
-### 2. Frontend
-
-```bash
-cd client
-npm install
-npm run dev            # starts on http://localhost:5173
-```
-
-The Vite dev server proxies `/api` requests to `localhost:5000`.
+Each folder (`Lec*`, `Assignment`, `Note_Sharing_Platform`) is self-contained — `cd` into it, run `npm install`, then start with the script noted in that folder's README (`npm run dev` / `npm start`).
 
 ---
 
-## Environment Variables
+## 📌 License
 
-### `server/.env`
-
-| Variable | Description |
-|---|---|
-| `MONGO_URI` | MongoDB connection string |
-| `JWT_SECRET` | Secret used to sign JWT tokens |
-| `CLIENT_URL` | Frontend origin (`http://localhost:5173` in dev, Vercel URL in prod) |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud name |
-| `CLOUDINARY_API_KEY` | Cloudinary API key |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
-| `GEMINI_API_KEY` | Google Gemini API key (AI summary) |
-| `GROQ_API_KEY` | Groq API key (chatbot/recommendations) |
-| `RESEND_API_KEY` | Resend API key (emails) |
-| `PORT` | Port (default `5000`) |
-| `NODE_ENV` | `development` / `production` |
-
-### `client/.env`
-
-| Variable | Description |
-|---|---|
-| `VITE_API_URL` | Backend URL (`http://localhost:5000` in dev, Render URL in prod) |
-
----
-
-## API Routes
-
-### Auth — `/api/auth`
-| Method | Route | Description | Auth |
-|---|---|---|---|
-| POST | `/signup` | Create account (sends verification email) | No |
-| POST | `/verify-email` | Verify email with code | No |
-| POST | `/resend-code` | Resend verification code | No |
-| POST | `/login` | Login, sets `jwt` httpOnly cookie | No |
-| POST | `/logout` | Clear cookie | No |
-| GET | `/me` | Current user | Yes |
-| POST | `/forgot-password` | Send reset link | No |
-| POST | `/reset-password` | Reset password with token | No |
-
-### Notes — `/api/notes`
-| Method | Route | Description | Auth |
-|---|---|---|---|
-| GET | `/` | List notes | No |
-| GET | `/mine` | My uploaded notes | Yes |
-| POST | `/` | Upload a note (multipart) | Yes |
-| GET | `/:id` | Note detail | No |
-| GET | `/:id/download` | Download file | No |
-| PUT | `/:id` | Update note | Yes |
-| POST | `/:id/vote` | Vote on note | Yes |
-| GET | `/:id/vote` | My vote on note | Yes |
-
-### AI — `/api/notes/:id`
-| Method | Route | Description | Auth |
-|---|---|---|---|
-| POST | `/summarize` | AI summary of note | Yes |
-| GET | `/recommendations` | Recommended notes | No |
-
-### Comments — `/api/notes/:id/comments`
-| Method | Route | Description | Auth |
-|---|---|---|---|
-| GET | `/` | Comment tree for a note | No |
-| POST | `/` | Add comment (or reply) | Yes |
-| GET | `/votes` | My comment votes | Yes |
-| POST | `/:commentId/vote` | Vote on a comment | Yes |
-| PUT | `/:commentId` | Edit comment | Yes |
-| DELETE | `/:commentId` | Delete comment | Yes |
-
-### Users — `/api/users`
-| Method | Route | Description | Auth |
-|---|---|---|---|
-| GET | `/me` | Profile + stats | Yes |
-| PATCH | `/me` | Update profile | Yes |
-
-### Chatbot — `/api/chatbot`
-| Method | Route | Description | Auth |
-|---|---|---|---|
-| POST | `/` | Chat with AI assistant | No |
-
----
-
-## Deployment
-
-### Vercel (Frontend)
-1. **Root Directory**: `Note_Sharing_Platform/client`
-2. **Build Command**: `npm run build`
-3. **Output Directory**: `dist`
-4. **Environment**: `VITE_API_URL` → your Render backend URL
-5. `client/vercel.json` handles SPA routing (rewrites all routes to `index.html`)
-
-### Render (Backend)
-1. **Root Directory**: `Note_Sharing_Platform/server`
-2. **Build Command**: `npm install`
-3. **Start Command**: `npm start`
-4. **Environment**: all variables from `server/.env`, plus `NODE_ENV=production` and `CLIENT_URL` = your Vercel URL
-
-### Cross-domain auth (important)
-Because frontend (Vercel) and backend (Render) are on different domains, the backend sets the JWT cookie with `secure: true` and `sameSite: 'none'`, and CORS is configured with `credentials: true` and an explicit origin.
-
----
-
-## Credentials
-
-> **Note:** API keys, secrets, and the MongoDB URI are stored in environment variables and are **not** committed to the repository.
-
-- Demo/test user credentials: _(add your test account details here)_
-- Database: MongoDB Atlas
-- File storage: Cloudinary
-- Email: Resend
-
----
-
-## Screenshots
-
-- Home page
-  ![Home](/Note_Sharing_Platform/Screenshots/Home.png)
-
-- Login page
-  ![Login](/Note_Sharing_Platform/Screenshots/Login.png)
-
-- Register / Sign Up page
-  ![Sign Up](/Note_Sharing_Platform/Screenshots/SignIn.png)
-
-- Chatbot
-  ![Chatbot](/Note_Sharing_Platform/Screenshots/ChatBot.png)
-
-- Dashboard
-  ![Dashboard](/Note_Sharing_Platform/Screenshots/Dashboard.png)
-
-- Profile page
-  ![Profile](/Note_Sharing_Platform/Screenshots/Profile.png)
-
----
-
-## License
-
-This project is for academic/educational purposes (MERN Summer Internship).
+This repository is for academic/educational purposes as part of a MERN Stack Summer Internship (July–Aug 2026).
